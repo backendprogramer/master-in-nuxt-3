@@ -6,6 +6,7 @@
           <span class="font-bold text-3xl">{{title}}</span>
         </span>
       </h1>
+      <user-card />
     </div>
 
     <div class="flex flex-row justify-center flex-grow">
