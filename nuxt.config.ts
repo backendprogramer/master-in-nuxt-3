@@ -2,10 +2,12 @@
 export default defineNuxtConfig({
     modules: [
         '@nuxtjs/tailwindcss',
-        '@vueuse/nuxt'
+        '@vueuse/nuxt',
+        '@nuxtjs/supabase'
       ],
       tailwindcss: {
-        cssPath: '~/assets/css/tailwind.css',
+        cssPath: '@/assets/css/tailwind.css',
+        postcss: {},
         autoprefixer: {},
       }
 })
