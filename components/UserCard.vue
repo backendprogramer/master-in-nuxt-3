@@ -1,21 +1,46 @@
 <template>
-    <div class="rounded p-3 flex items-center space-x-3 bg-white">
-        <img class="rounded-full w-12 h-12 border-2 border-blue-400" :src="profile" />
-        <div class="text-right">
-            <div class="font-medium">{{ name }}</div>
-            <button class="text-sm underline text-slate-500">Log out</button>
-        </div>
+  <div class="rounded p-3 flex items-center space-x-3 bg-white" v-if="user">
+    <img
+      class="rounded-full w-12 h-12 border-2 border-blue-400"
+      :src="profile"
+    />
+    <div class="text-right">
+      <div class="font-medium">{{ name }}</div>
+      <button class="text-sm underline text-slate-500" @click="logout">
+        Log out
+      </button>
     </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 const user = useSupabaseUser();
+const { auth } = useSupabaseAuthClient();
 
-const name = computed(
-    () => user?.value.user_metadata.full_name
-);
+const logout = async () => {
+  const { error } = await auth.signOut();
 
-const profile = computed(
-    () => user?.value.user_metadata.avatar_url
-);
+  if (error) {
+    console.log(error);
+    return;
+  }
+
+  // Thr Nuxt Supabase auth *should* be doing this
+  // for us, but it isn't for some reason.
+  try {
+    await $fetch("/api/_supabase/session", {
+      method: "POST",
+      body: { event: "SIGNED_OUT", session: null },
+    });
+    user.value = null;
+  } catch (e) {
+    console.error(error);
+  }
+  
+  await navigateTo("/login");
+};
+
+const name = computed(() => user.value?.user_metadata.full_name);
+
+const profile = computed(() => user.value?.user_metadata.avatar_url);
 </script>

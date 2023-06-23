@@ -1,6 +1,8 @@
 export default defineNuxtRouteMiddleware((to, from) => {
-    if (to.params.chapterSlug === 'l-chapter-1') {
+    const user = useSupabaseUser();
+
+    if (user.value || to.params.chapterSlug === 'l-chapter-1') {
         return;
     }
-    return navigateTo('/login');
+    return navigateTo(`/login?redirectTo=${to.path}`);
 });

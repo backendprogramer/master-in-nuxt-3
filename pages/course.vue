@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div class="prose mb-12 justify-center">
-      <h1>
+    <div class="mb-4 flex justify-between items-center w-full">
+      <h1 class="font-bold text-3xl">
         <span class="font-semibold">
-          <span class="font-bold text-3xl">{{title}}</span>
+          <span class="font-bold">{{title}}</span>
         </span>
       </h1>
       <user-card />
