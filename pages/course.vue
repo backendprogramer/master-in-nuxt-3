@@ -3,7 +3,7 @@
     <div class="mb-4 flex justify-between items-center w-full">
       <h1 class="font-bold text-3xl">
         <span class="font-semibold">
-          <span class="font-bold">{{title}}</span>
+          <span class="font-bold">{{ course.title }}</span>
         </span>
       </h1>
       <user-card />
@@ -16,7 +16,7 @@
         <h3 class="mb-4 font-bold">Chapters</h3>
         <div
           class="flex flex-col mb-4 space-y-1"
-          v-for="chapter in chapters"
+          v-for="chapter in course.chapters"
           :key="chapter.slug"
         >
           <h4 class="font-semibold">{{ chapter.title }}</h4>
@@ -58,12 +58,11 @@
   </div>
 </template>
 <script setup>
-const { chapters, title } = useCourse();
+const course= await useCourse();
+const firstLesson = await useFirstLesson();
 
 const resetError = async (error) => {
-  await navigateTo(
-    "/course/chapter/l-chapter-1/lesson/l-introduction-to-typescript-with-yvue-js-3"
-  );
+  await navigateTo(firstLesson.path);
   error.value = null;
 };
 </script>
