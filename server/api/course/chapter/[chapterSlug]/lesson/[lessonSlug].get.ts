@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
   }
 
 
-  const { chapterSlug, lessonSlug } = event.context.params;
+  const { chapterSlug, lessonSlug } = event.context.params  as { chapterSlug: string, lessonSlug: string };
 
   const lesson = await prisma.lesson.findFirst({
     where: {

@@ -23,21 +23,24 @@
     <video-player v-if="lesson.videoId" :videoId="lesson.videoId" />
     <p class="mb-4">{{ lesson.text }}</p>
     <lesson-complate-button
-      :model-value="isLessonComplete"
-      @update:model-value="toggleComplate"
+      v-if="user"
+      :model-value="isCompleted"
+      @update:model-value="toggleComplete"
     />
   </div>
 </template>
 
 <script setup>
+import { useCourseProgress } from "~/stores/courseProgress";
 const course = await useCourse();
+const user = useSupabaseUser();
 const route = useRoute();
 const { chapterSlug, lessonSlug } = route.params;
 const lesson = await useLesson(chapterSlug, lessonSlug);
+const store = useCourseProgress();
+const { initialize, toggleComplete } = store;
 
-// if(route.params.lessonSlug === 'l-typescript-in-vue-components') {
-//     console.log(route.params.paramthatdoesnotexistwhoops.capitalizeIsNotMethode());
-// }
+initialize();
 
 definePageMeta({
   middleware: [
@@ -70,8 +73,13 @@ definePageMeta({
         );
       }
     },
-    'auth'
+    "auth",
   ],
+});
+
+// Check if the current lesson is completed
+const isCompleted = computed(() => {
+  return store.progress?.[chapterSlug]?.[lessonSlug] || 0;
 });
 
 const chapter = computed(() => {
@@ -86,31 +94,4 @@ const title = computed(() => {
 useHead({
   title,
 });
-
-// const progress = useState('progress', () => {
-//     return [];
-// })
-const progress = useLocalStorage("progress", []);
-
-const isLessonComplete = computed(() => {
-  if (!progress.value[chapter.value.number - 1]) {
-    return false;
-  }
-
-  if (!progress.value[chapter.value.number - 1][lesson.value.number - 1]) {
-    return false;
-  }
-
-  return progress.value[chapter.value.number - 1][lesson.value.number - 1];
-});
-
-const toggleComplate = () => {
-  // throw createError('could not update')
-  if (!progress.value[chapter.value.number - 1]) {
-    progress.value[chapter.value.number - 1] = [];
-  }
-
-  progress.value[chapter.value.number - 1][lesson.value.number - 1] =
-    !isLessonComplete.value;
-};
 </script>

@@ -3,7 +3,8 @@ export default defineNuxtConfig({
     modules: [
         '@nuxtjs/tailwindcss',
         '@vueuse/nuxt',
-        '@nuxtjs/supabase'
+        '@nuxtjs/supabase',
+        '@pinia/nuxt',
       ],
       tailwindcss: {
         cssPath: '@/assets/css/tailwind.css',
